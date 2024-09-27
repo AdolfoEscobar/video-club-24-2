@@ -7,7 +7,7 @@ const Sequelize =  require('sequelize');
     4) Objeto de configuracion <<ORM>>
 */ 
 
-const sequelize = new Sequelize('video-club', 'root', 'abdc1234', {
+const sequelize = new Sequelize('video-club', 'root', 'Fofito250803', {
     host: '127.0.0.1',
     dialect: 'mysql'
 });
