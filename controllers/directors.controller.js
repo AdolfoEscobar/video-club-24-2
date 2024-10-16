@@ -1,5 +1,5 @@
 const express = require('express');
-const { Director } = require('../classes/db');
+const { Director } = require('../db');
 
 function create(req, res, next) {
     const { name, lastName } = req.body;

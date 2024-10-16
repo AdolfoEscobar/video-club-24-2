@@ -1,5 +1,5 @@
 const express = require('express');
-const { Actor } = require('../classes/db');
+const { Actor } = require('../db');
 
 function create(req, res, next) {
     const { name, lastName } = req.body;

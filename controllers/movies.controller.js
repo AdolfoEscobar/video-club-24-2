@@ -1,5 +1,5 @@
 const express = require('express');
-const { Movie, Actor } = require('../classes/db');
+const { Movie, Actor } = require('../db');
 
 function create(req, res, next) {
     const { title, genreId, directorId } = req.body;

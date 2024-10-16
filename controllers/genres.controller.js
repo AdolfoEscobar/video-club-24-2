@@ -1,5 +1,5 @@
 const express = require('express');
-const { Genre } = require('../classes/db');
+const { Genre } = require('../db');
 
 function create(req, res, next) {
     const { description, status } = req.body;
