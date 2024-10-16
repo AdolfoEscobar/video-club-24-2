@@ -14,8 +14,9 @@ const movieActorModel = require('./models/movieActor.model');
 */
 
 const sequelize = new Sequelize('video-club', 'root', 'Fofito250803', {
-    host: 'localhost',
-    dialect: 'mysql'
+    host: '127.0.0.1',
+    dialect: 'mysql',
+    port: 3306
 });
 
 const Director = directorModel(sequelize, Sequelize);

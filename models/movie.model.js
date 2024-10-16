@@ -6,7 +6,21 @@ module.exports = (sequelize, type) => {
             autoIncrement: true
         },
         title: type.STRING,
-        status: type.BOOLEAN
+        status: type.BOOLEAN,
+        genreId: {
+            type: type.INTEGER,
+            references: {
+                model: 'genres',
+                key: 'id'
+            }
+        },
+        directorId: {
+            type: type.INTEGER,
+            references: {
+                model: 'directors',
+                key: 'id'
+            }
+        }
     });
     return Movie;
 };

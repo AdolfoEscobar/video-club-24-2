@@ -5,8 +5,20 @@ module.exports = (sequelize, type) => {
             primaryKey: true,
             autoIncrement: true
         },
-        movieId: type.INTEGER,
-        actorId: type.INTEGER
+        movieId: {
+            type: type.INTEGER,
+            references: {
+                model: 'movies',
+                key: 'id'
+            }
+        },
+        actorId: {
+            type: type.INTEGER,
+            references: {
+                model: 'actors',
+                key: 'id'
+            }
+        }
     });
     return MovieActor;
 };
