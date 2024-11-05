@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const connectDB = require('./db'); // Importamos la conexión a MongoDB
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -12,6 +13,9 @@ const genresRouter = require('./routes/genres');
 const moviesRouter = require('./routes/movies');
 
 const app = express();
+
+// Conectar a MongoDB
+connectDB();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

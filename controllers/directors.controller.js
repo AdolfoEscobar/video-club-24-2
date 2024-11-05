@@ -1,99 +1,80 @@
-const express = require('express');
-const { Director } = require('../db');
+const Director = require('../models/director.model');
 
-function create(req, res, next) {
-    const { name, lastName } = req.body;
+async function create(req, res, next) {
+    try {
+        const { name, lastName } = req.body;
+        const director = await Director.create({ name, lastName });
+        res.json(director);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+}
 
-    Director.create({
-        name,
-        lastName
-    })
-        .then(director => {
-            res.json(director);
-        })
-        .catch(err => {
-            res.status(400).json(err);
-        });
+async function list(req, res, next) {
+    try {
+        const directors = await Director.find();
+        res.json(directors);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+}
 
-}
-function list(req, res, next) {
-    Director.findAll()
-        .then(directors => {
-            res.json(directors);
-        })
-        .catch(err => {
-            res.status(400).json(err);
-        });
-}
-function index(req, res, next) {
-    const { id } = req.params;
-    Director.findByPk(id)
-        .then(director => {
-            if (!director) {
-                return res.status(404).json({ message: 'Director not found' });
-            }
-            res.json(director);
-        })
-        .catch(err => {
-            res.status(400).json(err);
-        });
-}
-function replace(req, res, next) {
-    const { id } = req.params;
-    Director.findByPk(id).then(director => {
+async function index(req, res, next) {
+    try {
+        const { id } = req.params;
+        const director = await Director.findById(id);
         if (!director) {
             return res.status(404).json({ message: 'Director not found' });
         }
-        const { name, lastName } = req.body;
-        director.name = name;
-        director.lastName = lastName;
-        director.save()
-            .then(director => {
-                res.json(director);
-            })
-            .catch(err => {
-                res.status(400).json(err);
-            });
-    });    
+        res.json(director);
+    } catch (err) {
+        res.status(400).json(err);
+    }
 }
-function update(req, res, next) {
-    const { id } = req.params;
-    Director.findByPk(id).then(director => {
+
+async function replace(req, res, next) {
+    try {
+        const { id } = req.params;
+        const { name, lastName } = req.body;
+        const director = await Director.findByIdAndUpdate(
+            id,
+            { name, lastName },
+            { new: true }
+        );
+        if (!director) {
+            return res.status(404).json({ message: 'Director not found' });
+        }
+        res.json(director);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+}
+
+async function update(req, res, next) {
+    try {
+        const { id } = req.params;
+        const director = await Director.findById(id);
         if (!director) {
             return res.status(404).json({ message: 'Director not found' });
         }
         const { name, lastName } = req.body;
         director.name = name || director.name;
         director.lastName = lastName || director.lastName;
-        director.save()
-            .then(director => {
-                res.json(director);
-            })
-            .catch(err => {
-                res.status(400).json(err);
-            });
-    });
-}
-function destroy(req, res, next) {
-    const { id } = req.params;
-    Director.destroy({
-        where: {
-            id
-        }
-    })
-        .then(() => {
-            res.json({ message: 'Director deleted' });
-        })
-        .catch(err => {
-            res.status(400).json(err);
-        });
+        await director.save();
+        res.json(director);
+    } catch (err) {
+        res.status(400).json(err);
+    }
 }
 
-module.exports = {
-    create,
-    list,
-    index,
-    replace,
-    update,
-    destroy
-};
+async function destroy(req, res, next) {
+    try {
+        const { id } = req.params;
+        await Director.findByIdAndDelete(id);
+        res.json({ message: 'Director deleted' });
+    } catch (err) {
+        res.status(400).json(err);
+    }
+}
+
+module.exports = { create, list, index, replace, update, destroy };

@@ -1,12 +1,16 @@
-module.exports = (sequelize, type) => {
-    const Director = sequelize.define('directors', {
-        id: {
-            type: type.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        name: type.STRING,
-        lastName: type.STRING
-    });
-    return Director;
-};
+const mongoose = require('mongoose');
+
+const directorSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  lastName: {
+    type: String,
+    required: true
+  }
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model('Director', directorSchema);

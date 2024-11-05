@@ -1,24 +1,18 @@
-module.exports = (sequelize, type) => {
-    const MovieActor = sequelize.define('movies_actors', {
-        id: {
-            type: type.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        movieId: {
-            type: type.INTEGER,
-            references: {
-                model: 'movies',
-                key: 'id'
-            }
-        },
-        actorId: {
-            type: type.INTEGER,
-            references: {
-                model: 'actors',
-                key: 'id'
-            }
-        }
-    });
-    return MovieActor;
-};
+const mongoose = require('mongoose');
+
+const movieActorSchema = new mongoose.Schema({
+  movieId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Movie',
+    required: true
+  },
+  actorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Actor',
+    required: true
+  }
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model('MovieActor', movieActorSchema);

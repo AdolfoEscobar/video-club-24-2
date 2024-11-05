@@ -1,12 +1,16 @@
-module.exports = (sequelize, type) => {
-    const Genre = sequelize.define('genres', {
-        id: {
-            type: type.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        description: type.STRING,
-        status: type.BOOLEAN
-    });
-    return Genre;
-};
+const mongoose = require('mongoose');
+
+const genreSchema = new mongoose.Schema({
+  description: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: Boolean,
+    default: true
+  }
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model('Genre', genreSchema);

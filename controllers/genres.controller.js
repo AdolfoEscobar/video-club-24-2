@@ -1,99 +1,80 @@
-const express = require('express');
-const { Genre } = require('../db');
+const Genre = require('../models/genre.model');
 
-function create(req, res, next) {
-    const { description, status } = req.body;
+async function create(req, res, next) {
+    try {
+        const { description, status } = req.body;
+        const genre = await Genre.create({ description, status });
+        res.json(genre);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+}
 
-    Genre.create({
-        description,
-        status
-    })
-        .then(genre => {
-            res.json(genre);
-        })
-        .catch(err => {
-            res.status(400).json(err);
-        });
+async function list(req, res, next) {
+    try {
+        const genres = await Genre.find();
+        res.json(genres);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+}
 
-}
-function list(req, res, next) {
-    Genre.findAll()
-        .then(genre => {
-            res.json(genre);
-        })
-        .catch(err => {
-            res.status(400).json(err);
-        });
-}
-function index(req, res, next) {
-    const { id } = req.params;
-    Genre.findByPk(id)
-        .then(genre => {
-            if (!genre) {
-                return res.status(404).json({ message: 'Genre not found' });
-            }
-            res.json(genre);
-        })
-        .catch(err => {
-            res.status(400).json(err);
-        });
-}
-function replace(req, res, next) {
-    const { id } = req.params;
-    Genre.findByPk(id).then(genre => {
+async function index(req, res, next) {
+    try {
+        const { id } = req.params;
+        const genre = await Genre.findById(id);
         if (!genre) {
             return res.status(404).json({ message: 'Genre not found' });
         }
-        const { description, status } = req.body;
-        genre.description = description;
-        genre.status = status;
-        genre.save()
-            .then(genre => {
-                res.json(genre);
-            })
-            .catch(err => {
-                res.status(400).json(err);
-            });
-    });    
+        res.json(genre);
+    } catch (err) {
+        res.status(400).json(err);
+    }
 }
-function update(req, res, next) {
-    const { id } = req.params;
-    Genre.findByPk(id).then(genre => {
+
+async function replace(req, res, next) {
+    try {
+        const { id } = req.params;
+        const { description, status } = req.body;
+        const genre = await Genre.findByIdAndUpdate(
+            id,
+            { description, status },
+            { new: true }
+        );
+        if (!genre) {
+            return res.status(404).json({ message: 'Genre not found' });
+        }
+        res.json(genre);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+}
+
+async function update(req, res, next) {
+    try {
+        const { id } = req.params;
+        const genre = await Genre.findById(id);
         if (!genre) {
             return res.status(404).json({ message: 'Genre not found' });
         }
         const { description, status } = req.body;
         genre.description = description || genre.description;
         genre.status = status || genre.status;
-        genre.save()
-            .then(genre => {
-                res.json(genre);
-            })
-            .catch(err => {
-                res.status(400).json(err);
-            });
-    });
-}
-function destroy(req, res, next) {
-    const { id } = req.params;
-    Genre.destroy({
-        where: {
-            id
-        }
-    })
-        .then(() => {
-            res.json({ message: 'Genre deleted' });
-        })
-        .catch(err => {
-            res.status(400).json(err);
-        });
+        await genre.save();
+        res.json(genre);
+    } catch (err) {
+        res.status(400).json(err);
+    }
 }
 
-module.exports = {
-    create,
-    list,
-    index,
-    replace,
-    update,
-    destroy
-};
+async function destroy(req, res, next) {
+    try {
+        const { id } = req.params;
+        await Genre.findByIdAndDelete(id);
+        res.json({ message: 'Genre deleted' });
+    } catch (err) {
+        res.status(400).json(err);
+    }
+}
+
+module.exports = { create, list, index, replace, update, destroy };
