@@ -4,7 +4,7 @@ const User = require('../models/user.model');
 
 async function create(req, res, next) {
     try {
-        const { name, lastName, email, password } = req.body;
+        const { name, lastName, email, password, role } = req.body;
         
         // Generar salt
         const salt = await bcrypt.genSalt(10);
@@ -16,7 +16,8 @@ async function create(req, res, next) {
             lastName,
             email,
             password: passwordHash,
-            saltkey: salt
+            saltkey: salt,
+            role: role || 'viewer'
         });
 
         res.status(201).json({

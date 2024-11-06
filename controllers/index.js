@@ -1,6 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model')
+const jwt = require('jsonwebtoken');
+
+const jwtKey = "4c882dcb24bcb1bc225391a602feca7c"
 
 function home(req, res, next){
     res.render('index', { title: 'Express'});
@@ -29,9 +32,21 @@ async function login(req, res, next) {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
+            // Generar token con mayor duración (7 días)
+            const token = jwt.sign(
+                { 
+                    userId: user._id,
+                    email: user.email,
+                    role: user.role
+                },
+                jwtKey,
+                { expiresIn: '7d' }
+            );
+
             res.json({
                 msg: "Sesión iniciada correctamente",
-                obj: user
+                obj: user,
+                token
             });
         } else {
             res.status(403).json({

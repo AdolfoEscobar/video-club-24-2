@@ -1,24 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/users.controller');
-
+const checkAbility = require('../middleware/checkAbility');
 
 /* POST create user. */
 router.post('/', controller.create);
 
 /* GET users listing. */
-router.get('/', controller.list);
+router.get('/', checkAbility('read', 'User'), controller.list);
 
 /* GET user by id. */
-router.get('/:id', controller.index);
+router.get('/:id', checkAbility('read', 'User'), controller.index);
 
 /* PUT replace user by id. */
-router.put('/:id', controller.replace);
+router.put('/:id', checkAbility('update', 'User'), controller.replace);
 
 /* PATCH update user by id. */
-router.patch('/:id', controller.update);
+router.patch('/:id', checkAbility('update', 'User'), controller.update);
 
 /* DELETE user by id. */
-router.delete('/:id', controller.destroy);
+router.delete('/:id', checkAbility('delete', 'User'), controller.destroy);
 
 module.exports = router;
