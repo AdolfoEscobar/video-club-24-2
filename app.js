@@ -3,11 +3,19 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const connectDB = require('./db'); // Importamos la conexión a MongoDB
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const actorsRouter = require('./routes/actors');
+const directorsRouter = require('./routes/directors');
+const genresRouter = require('./routes/genres');
+const moviesRouter = require('./routes/movies');
 
 const app = express();
+
+// Conectar a MongoDB
+connectDB();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,6 +29,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/actors', actorsRouter);
+app.use('/directors', directorsRouter);
+app.use('/genres', genresRouter);
+app.use('/movies', moviesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
