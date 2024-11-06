@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
   saltkey: {
     type: String,
     required: true
+  },
+  role: {
+    type: String,
+    enum: ['admin', 'editor', 'viewer'],
+    default: 'viewer',
+    required: true
   }
 }, {
   timestamps: true
