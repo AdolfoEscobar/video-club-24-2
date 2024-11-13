@@ -1,0 +1,4 @@
+{
+    "login.fail": "Usuario y/o contraseña incorrectos",
+    "login.ok": "Sesion iniciada correctamente"
+}

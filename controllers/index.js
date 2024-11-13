@@ -2,8 +2,9 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model')
 const jwt = require('jsonwebtoken');
+const config = require('config');
 
-const jwtKey = "4c882dcb24bcb1bc225391a602feca7c"
+const jwtKey = config.get("secret.key");
 
 function home(req, res, next){
     res.render('index', { title: 'Express'});
@@ -16,7 +17,7 @@ async function login(req, res, next) {
         // Verificar que email y password estén presentes
         if (!email || !password) {
             return res.status(400).json({
-                msg: "Email y contraseña son requeridos",
+                msg: res.__('login.fail'),
                 obj: null
             });
         }
@@ -25,7 +26,7 @@ async function login(req, res, next) {
         
         if (!user) {
             return res.status(403).json({
-                msg: "Usuario y/o contraseña incorrectos",
+                msg: res.__('login.fail'),
                 obj: null
             });
         }
@@ -44,13 +45,13 @@ async function login(req, res, next) {
             );
 
             res.json({
-                msg: "Sesión iniciada correctamente",
+                msg: res.__('login.ok'),
                 obj: user,
                 token
             });
         } else {
             res.status(403).json({
-                msg: "Usuario y/o contraseña incorrectos",
+                msg: res.__('login.fail'),
                 obj: null
             });
         }

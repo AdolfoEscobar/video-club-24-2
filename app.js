@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const connectDB = require('./db');
 const User = require('./models/user.model');
-
+const config = require('config');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const actorsRouter = require('./routes/actors');
@@ -14,10 +14,11 @@ const genresRouter = require('./routes/genres');
 const moviesRouter = require('./routes/movies');
 const rolesRouter = require('./routes/roles');
 const {expressjwt} = require('express-jwt')
+const i18n = require('i18n');
 
 const app = express();
 
-const jwtKey = "4c882dcb24bcb1bc225391a602feca7c"
+const jwtKey = config.get("secret.key");
 
 connectDB();
 
@@ -25,11 +26,18 @@ connectDB();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+i18n.configure({
+    locales:['es', 'en'],
+    cookie: 'language',
+    directory: `${__dirname}/locales`
+})
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(i18n.init);
 app.use(expressjwt({
     secret: jwtKey, 
     algorithms: ['HS256']
